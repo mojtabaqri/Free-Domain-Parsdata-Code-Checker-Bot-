@@ -36,7 +36,7 @@ async def main():
             sms.verification({'receptor': '09025149810','type': '1','template': 'authcode','param1': getCode()})
         else:
             lastCode=getCode()
-        await asyncio.sleep(45*60)
+        await asyncio.sleep(10)
     
             
 asyncio.run(main())
