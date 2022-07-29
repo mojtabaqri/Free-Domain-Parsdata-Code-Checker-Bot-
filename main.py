@@ -3,9 +3,12 @@ import re
 import ghasedakpack
 import urllib.request
 from bs4 import BeautifulSoup
+import asyncio
+import requests
 
 
-
+lastCode="QPHKWHPX"
+sms = ghasedakpack.Ghasedak("2cb971f525dda65a268fefb25ba37afc14f90c4c3cc1b9c9629836c0833328cc")
 
 def readPage(url):
     fp = urllib.request.urlopen(url)
@@ -16,17 +19,28 @@ def readPage(url):
 
 
 
-def parsHtml():# Get Code From ParsData 
+
+def getCode():# Get Code From ParsData 
     soup = BeautifulSoup(readPage("https://www.parsdata.com/Default.aspx?ajax=1&sys=data&out=FDAjax&cul=fa-IR"), 'html.parser')
     el = soup.find_all("div", {"class": "fdCode"})
     result = []
     for th in el:
         result.extend(th.find_all('span'))
-    code=result[0].text   
+    code=result[0].text.strip()
+    return code
     
 
+async def main():
+    while 1:
+        await asyncio.sleep(45*60)
+        if lastCode!=getCode():
+            sms.verification({'receptor': '09025149810','type': '1','template': 'authcode','param1': getCode()})
+        else:
+            lastCode=getCode()
+            
+asyncio.run(main())
 
 
 
 
-# sms = ghasedakpack.Ghasedak("2cb971f525dda65a268fefb25ba37afc14f90c4c3cc1b9c9629836c0833328cc")
+
