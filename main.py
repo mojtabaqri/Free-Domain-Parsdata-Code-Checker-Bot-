@@ -7,7 +7,6 @@ import asyncio
 import requests
 
 
-lastCode="QPHKWHPX"
 sms = ghasedakpack.Ghasedak("2cb971f525dda65a268fefb25ba37afc14f90c4c3cc1b9c9629836c0833328cc")
 
 def readPage(url):
@@ -31,12 +30,14 @@ def getCode():# Get Code From ParsData
     
 
 async def main():
+    lastCode="QPHKWHPX"
     while 1:
-        await asyncio.sleep(45*60)
         if lastCode!=getCode():
             sms.verification({'receptor': '09025149810','type': '1','template': 'authcode','param1': getCode()})
         else:
             lastCode=getCode()
+        await asyncio.sleep(45*60)
+    
             
 asyncio.run(main())
 
